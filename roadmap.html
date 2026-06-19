@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Projects at Catom through Team 14</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #f8f8f8;
+    color: #111;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  .header-accent {
+    width: 6px;
+    height: 60px;
+    background: linear-gradient(180deg, #D0021B 0%, #1A7F3C 50%, #1B4FD8 100%);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #111;
+    line-height: 1.1;
+  }
+
+  header p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  .header-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  .tag-red   { color: #D0021B; border-color: #D0021B; background: #fff0f1; }
+  .tag-green { color: #1A7F3C; border-color: #1A7F3C; background: #f0fff4; }
+  .tag-blue  { color: #1B4FD8; border-color: #1B4FD8; background: #f0f4ff; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 3rem;
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #555;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── ROAD CONTAINER ── */
+  .road-wrap {
+    padding: 3rem 3rem 6rem;
+    position: relative;
+    min-height: 700px;
+  }
+
+  /* ── ROAD SVG ── */
+  .road-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── TIMELINE AXIS ── */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .phase {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .phase-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 8px;
+  }
+
+  .phase-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    text-align: right;
+  }
+
+  .phase-subtitle {
+    font-size: 0.75rem;
+    color: #bbb;
+    text-align: right;
+    margin-top: 2px;
+  }
+
+  .phase-content {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding-left: 1.5rem;
+    border-left: 2px dashed #ddd;
+    position: relative;
+  }
+
+  .phase-content::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 12px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    border: 2px solid #fff;
+  }
+
+  .phase-red   .phase-content::before { background: #D0021B; }
+  .phase-green .phase-content::before { background: #1A7F3C; }
+  .phase-blue  .phase-content::before { background: #1B4FD8; }
+  .phase-red   .phase-content { border-color: #D0021B44; }
+  .phase-green .phase-content { border-color: #1A7F3C44; }
+  .phase-blue  .phase-content { border-color: #1B4FD844; }
+
+  /* ── SKILL PILLS (non-project) ── */
+  .skill-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #444;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    cursor: default;
+  }
+
+  .skill-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── PROJECT CARDS ── */
+  .project-card {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    border: 1.5px solid #e8e8e8;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    min-width: 200px;
+    max-width: 240px;
+    flex-shrink: 0;
+  }
+
+  .project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  }
+
+  .project-card.red   { border-color: #D0021B55; }
+  .project-card.green { border-color: #1A7F3C55; }
+  .project-card.blue  { border-color: #1B4FD855; }
+
+  .project-card.red:hover   { border-color: #D0021B; box-shadow: 0 8px 24px #D0021B22; }
+  .project-card.green:hover { border-color: #1A7F3C; box-shadow: 0 8px 24px #1A7F3C22; }
+  .project-card.blue:hover  { border-color: #1B4FD8; box-shadow: 0 8px 24px #1B4FD822; }
+
+  .card-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #f6f6f6;
+    border: 1px solid #eee;
+  }
+
+  .card-logo img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .card-logo.brand, .popup-logo.brand {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+
+  .logo-red   { background: #fff0f1; }
+  .logo-green { background: #f0fff4; }
+  .logo-blue  { background: #f0f4ff; }
+  .brand-tln {
+    background: #003082;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .brand-sql {
+    background: #CC2927;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .brand-dyflexis {
+    background: #5B2D8E;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .brand-ok {
+    background: #00843D;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .brand-catom {
+    background: #1a1a1a;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .brand-adp {
+    background: #D0021B;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .card-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #111;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .card-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .chip {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  .chip-red   { background: #fff0f1; color: #D0021B; }
+  .chip-green { background: #f0fff4; color: #1A7F3C; }
+  .chip-blue  { background: #f0f4ff; color: #1B4FD8; }
+  .chip-gray  { background: #f2f2f2; color: #666; }
+
+  .card-hover-hint {
+    font-size: 0.68rem;
+    color: #bbb;
+    margin-top: 8px;
+  }
+
+  /* ── POPUP OVERLAY ── */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .popup-overlay.active {
+    display: flex;
+  }
+
+  .popup {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 560px;
+    width: 100%;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    animation: popIn 0.18s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: #f2f2f2;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #666;
+    transition: background 0.15s;
+  }
+
+  .popup-close:hover { background: #e8e8e8; }
+
+  .popup-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.25rem;
+    padding-right: 2rem;
+  }
+
+  .popup-logo {
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #f6f6f6;
+    border: 1px solid #eee;
+  }
+
+  .popup-logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .popup-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.2;
+  }
+
+  .popup-sub {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  .popup-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 1rem 0;
+  }
+
+  .popup-body {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: #333;
+  }
+
+  .popup-body p + p {
+    margin-top: 0.75rem;
+  }
+
+  .popup-tech {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .popup-chip {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  .popup-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    color: #1B4FD8;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .popup-link:hover { text-decoration: underline; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    color: #bbb;
+    border-top: 1px solid #eee;
+    background: #fff;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-accent"></div>
+  <div>
+    <h1>My projects at Catom through Team 14 so far :</h1>
+    <p>Data integration · API engineering · SQL · Azure · HR systems</p>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#D0021B"></div> Data pipelines &amp; middleware</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1A7F3C"></div> SQL &amp; master data</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1B4FD8"></div> API &amp; cloud integration</div>
+</div>
+
+<div class="road-wrap">
+  <div class="timeline">
+
+    <!-- PHASE 1 -->
+    <div class="phase phase-red">
+      <div class="phase-label">
+        <span class="phase-title">Getting started</span>
+        <span class="phase-subtitle">Jan 2026</span>
+      </div>
+      <div class="phase-content">
+        <div class="skill-pill"><span class="dot" style="background:#D0021B"></span>Middleware pipeline design</div>
+        <div class="skill-pill"><span class="dot" style="background:#1A7F3C"></span>SQL Server querying &amp; schema design</div>
+        <div class="skill-pill"><span class="dot" style="background:#1B4FD8"></span>REST API integration</div>
+        <div class="skill-pill"><span class="dot" style="background:#1A7F3C"></span>Data reconciliation</div>
+        <div class="skill-pill"><span class="dot" style="background:#D0021B"></span>Azure Blob Storage</div>
+        <div class="skill-pill"><span class="dot" style="background:#1A7F3C"></span>Master data modelling</div>
+        <div class="skill-pill"><span class="dot" style="background:#1B4FD8"></span>Data analysis &amp; validation</div>
+        <div class="skill-pill"><span class="dot" style="background:#D0021B"></span>Multi-system data mapping</div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase phase-green">
+      <div class="phase-label">
+        <span class="phase-title">First Projects</span>
+        <span class="phase-subtitle">Feb – Mar 2026</span>
+      </div>
+      <div class="phase-content">
+
+        <div class="project-card green" onclick="openPopup('fuel')">
+          <div class="card-logo brand-tln brand" style="background:#003082;color:#ffffff">TLN</div>
+          <div class="card-name">Diesel Price Monitor for TLN</div>
+          <div class="card-chips"><span class="chip chip-green">SQL</span><span class="chip chip-gray">API</span><span class="chip chip-green">Live data</span></div>
+          <div class="card-hover-hint">Click for details →</div>
+        </div>
+
+        <div class="project-card green" onclick="openPopup('masterdata')">
+          <div class="card-logo brand-sql brand" style="background:#CC2927;color:#ffffff">SQL</div>
+          <div class="card-name">Fuel Master Data Architecture</div>
+          <div class="card-chips"><span class="chip chip-green">SQL Server</span><span class="chip chip-gray">Relational design</span><span class="chip chip-green">Data reconciliation</span></div>
+          <div class="card-hover-hint">Click for details →</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase phase-blue">
+      <div class="phase-label">
+        <span class="phase-title">API Integration</span>
+        <span class="phase-subtitle">Mar – Apr 2026</span>
+      </div>
+      <div class="phase-content">
+
+        <div class="project-card blue" onclick="openPopup('dyflexis')">
+          <div class="card-logo brand-dyflexis brand" style="background:#5B2D8E;color:#ffffff">Dy</div>
+          <div class="card-name">Dyflexis API Integration</div>
+          <div class="card-chips"><span class="chip chip-blue">REST API</span><span class="chip chip-blue">Lobster</span><span class="chip chip-gray">JSON</span></div>
+          <div class="card-hover-hint">Click for details →</div>
+        </div>
+
+        <div class="project-card blue" onclick="openPopup('odata')">
+          <div class="card-logo brand-ok brand" style="background:#D0004B;color:#ffffff">OK</div>
+          <div class="card-name">OK Oliecentrale OData API</div>
+          <div class="card-chips"><span class="chip chip-blue">OData</span><span class="chip chip-blue">Basic Auth</span><span class="chip chip-gray">Lobster</span></div>
+          <div class="card-hover-hint">Click for details →</div>
+        </div>
+
+        <div style="width:100%; flex-basis:100%"></div>
+        <div class="skill-pill"><span class="dot" style="background:#1B4FD8"></span>OAuth2 and mTLS</div>
+        <div class="skill-pill"><span class="dot" style="background:#D0021B"></span>Pagination handling</div>
+        <div class="skill-pill"><span class="dot" style="background:#1A7F3C"></span>Error handling and logging</div>
+
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase phase-red">
+      <div class="phase-label">
+        <span class="phase-title">HR Migration</span>
+        <span class="phase-subtitle">Apr – Jun 2026</span>
+      </div>
+      <div class="phase-content">
+
+        <div class="project-card red" onclick="openPopup('catom')">
+          <div class="card-logo brand-catom brand" style="background:#1a1a1a;color:#ffffff">Ca</div>
+          <div class="card-name">Catom HR Systems Integration (BP to OK)</div>
+          <div class="card-chips"><span class="chip chip-red">Lobster</span><span class="chip chip-red">ADP</span><span class="chip chip-blue">Azure Blob</span><span class="chip chip-gray">Dyflexis</span></div>
+          <div class="card-hover-hint">Click for details →</div>
+        </div>
+
+        <div class="project-card red" onclick="openPopup('adp')">
+          <div class="card-logo brand-adp brand" style="background:#D0021B;color:#ffffff">ADP</div>
+          <div class="card-name">ADP Workforce Now EU API Pipeline</div>
+          <div class="card-chips"><span class="chip chip-blue">OAuth2</span><span class="chip chip-blue">mTLS</span><span class="chip chip-red">SQL Server</span></div>
+          <div class="card-hover-hint">Click for details →</div>
+        </div>
+
+        <div class="project-card red" onclick="openPopup('payroll')">
+          <div class="card-logo brand-dyflexis brand" style="background:#5B2D8E;color:#ffffff">Dy</div>
+          <div class="card-name">Payroll Hours Pipeline from Dyflexis to HR</div>
+          <div class="card-chips"><span class="chip chip-red">SQL</span><span class="chip chip-gray">Scheduled jobs</span><span class="chip chip-green">Azure Blob</span></div>
+          <div class="card-hover-hint">Click for details →</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PHASE 5 -->
+    <div class="phase phase-blue">
+      <div class="phase-label">
+        <span class="phase-title">Now</span>
+        <span class="phase-subtitle">2026</span>
+      </div>
+      <div class="phase-content">
+        <div class="skill-pill"><span class="dot" style="background:#1B4FD8"></span>ADP Workforce full rollout</div>
+        <div class="skill-pill"><span class="dot" style="background:#1A7F3C"></span>Fuel price schema design</div>
+        <div class="skill-pill"><span class="dot" style="background:#1B4FD8"></span>Multi-system master data</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── POPUPS ── -->
+
+<div class="popup-overlay" id="overlay" onclick="closeIfOutside(event)">
+  <div class="popup" id="popup-content">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div id="popup-inner"></div>
+  </div>
+</div>
+
+<footer>Data Integration Engineer Portfolio · Built with care · 2026</footer>
+
+<script>
+const BRAND = {
+  tln:      { text: 'TLN', bg: '#003082', fg: '#ffffff' },
+  sql:      { text: 'SQL', bg: '#CC2927', fg: '#ffffff' },
+  dyflexis: { text: 'Dy',  bg: '#5B2D8E', fg: '#ffffff' },
+  ok:       { text: 'OK',  bg: '#00843D', fg: '#ffffff' },
+  catom:    { text: 'Ca',  bg: '#1a1a1a', fg: '#ffffff' },
+  adp:      { text: 'ADP', bg: '#D0021B', fg: '#ffffff' },
+};
+
+function logoImg(key, alt) {
+  const b = BRAND[key];
+  return '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:' + b.bg + ';color:' + b.fg + ';font-size:0.8rem;font-weight:800;letter-spacing:0.02em;border-radius:inherit">' + b.text + '</span>';
+}
+
+const projects = {
+  fuel: {
+    logoKey: 'tln', logoAlt: 'TLN',
+    logoClass: 'logo-green',
+    name: 'Diesel Price Monitor for TLN',
+    sub: 'Live fuel pricing · Published on TLN.nl',
+    chips: [
+      { label: 'SQL', cls: 'chip-green' },
+      { label: 'API integration', cls: 'chip-gray' },
+      { label: 'Live data', cls: 'chip-green' }
+    ],
+    body: `<p>Built and maintain the live fuel price monitoring pipeline that feeds published data on TLN.nl (Transport en Logistiek Nederland). The integration pulls diesel prices across Dutch fuel stations and surfaces them for logistics companies in near real time.</p>
+<p>The pipeline ingests pricing feeds from multiple sources, transforms and validates the data through SQL Server, and outputs structured results consumed by TLN's public brandstofmonitor. This project demonstrated end to end ownership of a live data product used by thousands of transport professionals.</p>`,
+    link: 'https://www.tln.nl/ledenvoordeel/brandstofmonitor',
+    linkText: 'View live on TLN.nl →'
+  },
+  masterdata: {
+    logoKey: 'sql', logoAlt: 'SQL',
+    logoClass: 'logo-green',
+    name: 'Fuel Master Data Architecture',
+    sub: 'SQL Server · Relational design',
+    chips: [
+      { label: 'SQL Server', cls: 'chip-green' },
+      { label: 'Relational modelling', cls: 'chip-gray' },
+      { label: 'Data reconciliation', cls: 'chip-green' }
+    ],
+    body: `<p>Designed and implemented a relational master data structure in SQL Server to centrally manage fuel sites and products across multiple downstream systems including Siqma, Extendas, Routex and BlueYonder.</p>
+<p>The architecture replaced scattered config files with normalised tables joined to system specific mapping tables. This makes it straightforward to add new systems or spot missing mappings across the full landscape without touching integration profiles. Data reconciliation across systems was a core part of validating the design.</p>`
+  },
+  dyflexis: {
+    logoKey: 'dyflexis', logoAlt: 'Dyflexis',
+    logoClass: 'logo-blue',
+    name: 'Dyflexis API Integration',
+    sub: 'Workforce management · REST API via Lobster',
+    chips: [
+      { label: 'REST API', cls: 'chip-blue' },
+      { label: 'Lobster', cls: 'chip-blue' },
+      { label: 'JSON', cls: 'chip-gray' },
+      { label: 'Pagination', cls: 'chip-gray' }
+    ],
+    body: `<p>Built the integration between Digital HR (BP) and the Dyflexis workforce management platform using Lobster as middleware. The pipeline syncs employee master data daily via API and sends approved payroll hours back to HR systems.</p>
+<p>This included designing the full API flow covering employee creation and update, contract linking, payroll queue fetching and queue status callbacks. Pagination across large employee sets and robust error handling were key engineering concerns. The integration runs daily across 55 BP stations and all OK stations.</p>`
+  },
+  odata: {
+    logoKey: 'ok', logoAlt: 'OK',
+    logoClass: 'logo-blue',
+    name: 'OK Oliecentrale OData API',
+    sub: 'Fuel data · OData · Lobster channel',
+    chips: [
+      { label: 'OData', cls: 'chip-blue' },
+      { label: 'Basic Auth', cls: 'chip-blue' },
+      { label: 'Lobster', cls: 'chip-gray' }
+    ],
+    body: `<p>Configured and tested a Lobster channel connecting to the OK Oliecentrale OData test API using Basic Authentication. Worked with the API specification to set up correct endpoint targeting, authentication headers and response handling inside the Lobster profile.</p>
+<p>This involved verifying the authentication method, validating the channel configuration and structuring the profile to consume and transform OData formatted fuel data for use in downstream systems.</p>`
+  },
+  catom: {
+    logoKey: 'catom', logoAlt: 'Catom',
+    logoClass: 'logo-red',
+    name: 'Catom HR Systems Integration (BP to OK)',
+    sub: '2026 HR migration · Multi-system middleware project',
+    chips: [
+      { label: 'Lobster', cls: 'chip-red' },
+      { label: 'ADP Perman', cls: 'chip-red' },
+      { label: 'ADP Workforce', cls: 'chip-red' },
+      { label: 'Digital HR', cls: 'chip-gray' },
+      { label: 'Azure Blob', cls: 'chip-blue' },
+      { label: 'Dyflexis', cls: 'chip-gray' },
+      { label: 'Mailchimp', cls: 'chip-gray' }
+    ],
+    body: `<p>Core contributor to the 2026 HR systems migration at Catom, the refining company that acquired around 300 BP fuel stations in the Netherlands. The project integrates HR systems from two organisations, BP (Digital HR and ADP Perman) and OK (ADP Workforce), into a unified middleware layer built on Lobster.</p>
+<p>Built and documented integration profiles covering employee master data sync, contract management, payroll hours transfer and time registration. Azure Blob Storage serves as the staging layer for daily files from Digital HR. The migration is phased across Dyflexis, ADP Perman and ADP Workforce Now as target systems, coordinated with BP and OK HR teams.</p>`
+  },
+  adp: {
+    logoKey: 'adp', logoAlt: 'ADP',
+    logoClass: 'logo-red',
+    name: 'ADP Workforce Now EU API Pipeline',
+    sub: 'OAuth2 and mTLS · SQL Server target',
+    chips: [
+      { label: 'OAuth2', cls: 'chip-blue' },
+      { label: 'mTLS', cls: 'chip-blue' },
+      { label: 'Client certificates', cls: 'chip-gray' },
+      { label: 'SQL Server', cls: 'chip-red' },
+      { label: 'Lobster', cls: 'chip-red' }
+    ],
+    body: `<p>Designed and built a data pipeline from ADP Workforce Now (EU) into SQL Server via Lobster. The integration targets the ADP EU API, which requires mutual TLS authentication in addition to OAuth2 client credentials, a more complex security setup than standard REST APIs.</p>
+<p>Handled certificate provisioning, OAuth2 token acquisition and structured the Lobster profile to authenticate and retrieve worker records into SQL Server. This project built hands on expertise in enterprise grade API security patterns and end to end pipeline design.</p>`
+  },
+  payroll: {
+    logoKey: 'dyflexis', logoAlt: 'Dyflexis',
+    logoClass: 'logo-red',
+    name: 'Payroll Hours Pipeline from Dyflexis to HR',
+    sub: 'Scheduled automation · Excel reporting · Azure Blob',
+    chips: [
+      { label: 'SQL', cls: 'chip-red' },
+      { label: 'Scheduled jobs', cls: 'chip-gray' },
+      { label: 'Azure Blob', cls: 'chip-green' },
+      { label: 'Excel reports', cls: 'chip-gray' },
+      { label: 'Lobster', cls: 'chip-red' }
+    ],
+    body: `<p>Built a multi profile automated pipeline that retrieves approved and locked payroll hours from Dyflexis and routes them to Digital HR (BP) and ADP Workforce (OK). The pipeline runs on scheduled jobs and handles both weekly and monthly payroll cycles depending on contract type.</p>
+<p>The pipeline spans six chained Lobster profiles covering queue selection from SQL, API fetching, data staging, Excel report generation, email delivery to HR and status callbacks to Dyflexis. Smart date logic ensures the correct month's data is always selected, including edge cases around the start of a new month.</p>`
+  }
+};
+
+function openPopup(key) {
+  const p = projects[key];
+  const chips = p.chips.map(c => '<span class="popup-chip ' + c.cls + '">' + c.label + '</span>').join('');
+  const link = p.link ? '<a class="popup-link" href="' + p.link + '" target="_blank">' + p.linkText + '</a>' : '';
+  document.getElementById('popup-inner').innerHTML =
+    '<div class="popup-header">' +
+      '<div class="popup-logo ' + p.logoClass + '">' + logoImg(p.logoKey, p.logoAlt) + '</div>' +
+      '<div>' +
+        '<div class="popup-title">' + p.name + '</div>' +
+        '<div class="popup-sub">' + p.sub + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="popup-divider"></div>' +
+    '<div class="popup-body">' + p.body + link + '</div>' +
+    '<div class="popup-tech">' + chips + '</div>';
+  document.getElementById('overlay').classList.add('active');
+}
+
+function closePopup() {
+  document.getElementById('overlay').classList.remove('active');
+}
+
+function closeIfOutside(e) {
+  if (e.target === document.getElementById('overlay')) closePopup();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+</script>
+</body>
+</html>
